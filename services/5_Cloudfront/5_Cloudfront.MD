@@ -275,7 +275,7 @@ graph LR
 <details>
 <summary>Reference screenshot</summary>
 
-![Route53 record settings](./img/aws_cf_defining_record.png)
+![Route53 record settings](../../assets/img/aws_cf_defining_record.png)
 
 </details>
 

@@ -114,7 +114,7 @@ Process:
   <details>
   <summary>Creation of IAM Role for AWS service (EC2)</summary>
 
-  ![creation page](./img/aws_cw_iam_role_creation.png)
+  ![creation page](../../assets/img/aws_cw_iam_role_creation.png)
 
   </details>
 - Under Step 2:
@@ -214,7 +214,7 @@ Logs now appear in the AWS Console under **CloudWatch → Log groups → /ec2/my
 <details>
 <summary>Sample output</summary>
 
-![OP](./img/aws_cw_op.png)
+![OP](../../assets/img/aws_cw_op.png)
 
 </details>
 

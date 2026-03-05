@@ -109,7 +109,7 @@ zip lambda_function.zip -u books.json
     <details>
     <summary>change this path to the api endpoints</summary>
 
-    ![OP](./img/aws_l_proxy_path.png)
+    ![OP](../../assets/img/aws_l_proxy_path.png)
 
     </details>
 - Then try to test again, it should/will work
