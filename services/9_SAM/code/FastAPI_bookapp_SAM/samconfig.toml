@@ -1,0 +1,14 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "sam-app-fastapibook"
+resolve_s3 = true
+s3_prefix = "sam-app-fastapibook"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = ["HelloWorldFunction=730335510642.dkr.ecr.us-east-1.amazonaws.com/samappfastapibook56c026a5/helloworldfunction19d43fc4repo"]
+
+[default.global.parameters]
+region = "us-east-1"
