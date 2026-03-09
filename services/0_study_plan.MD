@@ -319,7 +319,7 @@ Deploy an S3 bucket and IAM role using a raw CloudFormation template (without SA
 
 ---
 
-### AWS CDK (Cloud Development Kit)
+### AWS CDK (Cloud Development Kit) - IGNORED
 
 Write your infrastructure in Python, TypeScript, or Java instead of YAML.
 
@@ -342,7 +342,7 @@ Rewrite one of your SAM stacks using CDK in Python.
 
 ---
 
-### AWS Toolkit (IDE Extension)
+### AWS Toolkit (IDE Extension) - Used the editor in AWS Console, simialr to VS Code
 
 AWS Toolkit is a free extension for VS Code and JetBrains IDEs that brings Lambda, SAM, and CloudFormation development directly into your editor.
 
@@ -363,7 +363,7 @@ Run containerised workloads on AWS — from fully managed serverless containers 
 
 ---
 
-### ECS (Elastic Container Service)
+### ECS (Elastic Container Service) - DID Not implement
 
 - [ ] Clusters, services, and tasks
 - [ ] EC2 launch type vs. Fargate *(prefer Fargate — no server management)*
