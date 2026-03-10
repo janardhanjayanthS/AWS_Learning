@@ -239,6 +239,8 @@ table.delete_item(Key={"userId": "u1", "orderId": "001"})
 - DAX - from the sidebar is used to create a caching layer infront of the DynamoDB table(s)
 - use [boto3](https://docs.aws.amazon.com/boto3/latest/reference/services/dynamodb.html) to interact with table data using python
 
+## Step 3: Table Deletion
+- Delete the table from the list of table by selecting it and clicking the delete table from top right
 
 
 ---
