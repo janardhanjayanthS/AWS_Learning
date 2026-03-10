@@ -232,7 +232,14 @@ table.delete_item(Key={"userId": "u1", "orderId": "001"})
     - Provisioned: allows more configurations - like configuring auto scaling, etc... (choose this)
 
 
-### Step 2: 
+## Step 2: Interact with Table
+- Goto Explore Items tab from side bar to add items to the table
+- And also I can add an item with multiple attrs (columns) even if I did not predefine them
+- PartiQL editor from the side bar allows to write SQL to access table info. (but underneath it uses the APIs)
+- DAX - from the sidebar is used to create a caching layer infront of the DynamoDB table(s)
+- use [boto3](https://docs.aws.amazon.com/boto3/latest/reference/services/dynamodb.html) to interact with table data using python
+
+
 
 ---
 
