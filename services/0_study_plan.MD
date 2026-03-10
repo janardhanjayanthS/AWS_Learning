@@ -477,6 +477,62 @@ Create a DocumentDB cluster and perform CRUD operations using `pymongo` from a L
 
 ---
 
+### Load Balancers (ALB & NLB)
+
+AWS load balancers distribute incoming traffic across multiple targets (EC2, ECS, Lambda, IP addresses).
+
+- [ ] Application Load Balancer (ALB) — HTTP/HTTPS, path-based and host-based routing
+- [ ] Network Load Balancer (NLB) — TCP/UDP, ultra-low latency, static IPs
+- [ ] ALB vs. NLB — when to use which
+- [ ] Target groups and health checks
+- [ ] Listeners and rules — routing traffic by path or hostname
+- [ ] ALB + ECS / EC2 integration
+- [ ] SSL termination at the load balancer (via ACM)
+
+#### 📺 Videos
+- [AWS Load Balancer Tutorial — AWS Online Tech Talks](https://www.youtube.com/results?search_query=AWS+application+load+balancer+tutorial+tech+talks)
+- [ALB vs NLB Explained — Be a Better Dev](https://www.youtube.com/results?search_query=ALB+vs+NLB+aws+be+a+better+dev)
+
+#### 📖 Docs & Reading
+- [ALB User Guide — AWS Docs](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
+- [NLB User Guide — AWS Docs](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html)
+- [Choosing a Load Balancer — AWS Docs](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html)
+
+#### Practice
+Deploy a FastAPI app on EC2 or ECS and place an ALB in front of it. Add HTTPS using an ACM certificate attached to the ALB listener.
+
+---
+
+### RDS (Relational Database Service)
+
+AWS's managed SQL database. Handles backups, patching, failover, and replication for you. Supports PostgreSQL, MySQL, MariaDB, Oracle, and SQL Server. Aurora is AWS's own high-performance variant.
+
+- [ ] When to use RDS vs. DynamoDB — relational data, complex queries, existing SQL apps
+- [ ] Instance types and storage (General Purpose vs. Provisioned IOPS)
+- [ ] Multi-AZ deployments — automatic failover for high availability
+- [ ] Read replicas — offload read traffic
+- [ ] RDS vs. Aurora — when Aurora is worth it
+- [ ] Automated backups and snapshots
+- [ ] Parameter groups and option groups
+- [ ] Connecting from Lambda (VPC + security groups + connection pooling)
+- [ ] RDS Proxy — pool and share DB connections from Lambda to avoid connection exhaustion
+
+#### 📺 Videos
+- [AWS RDS Tutorial for Beginners — freeCodeCamp](https://www.youtube.com/results?search_query=AWS+RDS+tutorial+beginners+freeCodeCamp)
+- [RDS vs Aurora Explained — AWS Online Tech Talks](https://www.youtube.com/results?search_query=RDS+vs+Aurora+AWS+tech+talks)
+- [Lambda + RDS Proxy — AWS Demo](https://www.youtube.com/results?search_query=lambda+RDS+proxy+AWS+demo)
+
+#### 📖 Docs & Reading
+- [RDS Getting Started — AWS Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.html)
+- [RDS Best Practices — AWS Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html)
+- [RDS Proxy User Guide — AWS Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html)
+- [Lambda + RDS — AWS Blog](https://aws.amazon.com/blogs/compute/using-amazon-rds-proxy-with-aws-lambda/)
+
+#### Practice
+Provision an RDS PostgreSQL instance in a private subnet, connect to it from a Lambda function via RDS Proxy, and perform basic CRUD using `psycopg2`.
+
+---
+
 ### OpenSearch
 
 Amazon OpenSearch Service (formerly Elasticsearch Service) is AWS's managed search and analytics engine. Best for full-text search, log analytics, and Kibana-style dashboards.
@@ -806,15 +862,20 @@ Build a backend API for a simple app (e.g. a task manager or e-commerce backend)
 Request
   └── Route 53 (custom domain)
         └── CloudFront (CDN + HTTPS via ACM)
-              └── API Gateway (HTTP API)
-                    └── Cognito Authorizer (authentication)
-                          └── Lambda (business logic)
-                                ├── DynamoDB (primary storage)
-                                ├── ElastiCache / Redis (caching layer)
-                                ├── Secrets Manager (credentials)
-                                ├── SES (transactional emails)
-                                ├── S3 (file storage)
-                                └── SQS / EventBridge (async events)
+              └── ALB (Application Load Balancer — HTTPS termination, routing)
+                    ├── API Gateway (HTTP API — serverless path)
+                    │     └── Cognito Authorizer (authentication)
+                    │           └── Lambda (business logic)
+                    │                 ├── DynamoDB (primary NoSQL storage)
+                    │                 ├── RDS PostgreSQL via RDS Proxy (relational storage)
+                    │                 ├── ElastiCache / Redis (caching layer)
+                    │                 ├── Secrets Manager (credentials)
+                    │                 ├── SES (transactional emails)
+                    │                 ├── S3 (file storage)
+                    │                 └── SQS / EventBridge (async events)
+                    │
+                    └── ECS Fargate (containerised path — alternative to Lambda)
+                          └── same backing services as above
 
 Orchestration:
   └── Step Functions (multi-step workflows)
@@ -825,9 +886,6 @@ Observability:
 
 Infrastructure:
   └── SAM or CDK (deployed as code)
-
-Containers (optional variation):
-  └── ECS Fargate (deploy as a container instead of Lambda)
 ```
 
 ### Capstone Checklist
@@ -835,6 +893,8 @@ Containers (optional variation):
 - [ ] All secrets in Secrets Manager — nothing hardcoded
 - [ ] All endpoints protected by Cognito
 - [ ] Custom domain via Route 53 + HTTPS via ACM + CloudFront
+- [ ] ALB in front of services with HTTPS termination via ACM
+- [ ] RDS PostgreSQL in a private subnet, accessed from Lambda via RDS Proxy
 - [ ] CloudWatch alarms set for errors and high latency
 - [ ] X-Ray tracing enabled across all services
 - [ ] At least one async flow (e.g. welcome email on sign-up via SES)
@@ -854,7 +914,6 @@ These are useful to know about but not essential to go deep on for standard back
 
 | Service | Category | Notes |
 |---------|----------|-------|
-| **RDS** | Database | Managed SQL (PostgreSQL, MySQL, Aurora). Use when your project genuinely needs a relational DB. [RDS Getting Started — AWS Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.html) |
 | **Elastic Beanstalk** | Compute | PaaS — deploys apps automatically. Not really needed; EC2 + ECS give you more control and are more widely used. |
 | **App Runner** | Compute | Simplified container deployment from source code or an image. Not really needed; ECS Fargate is more flexible and better understood by teams. |
 
