@@ -1,4 +1,0 @@
-authlib
-werkzeug
-flask
-requests
