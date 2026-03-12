@@ -783,6 +783,28 @@ Build a multi-step order processing workflow: validate → process payment → s
 
 ---
 
+### SES (Simple Email Service)
+
+- [ ] Verifying identities and domains
+- [ ] Sending transactional emails from Lambda
+- [ ] Handling bounces and complaints *(critical in production)*
+- [ ] Moving out of the SES sandbox
+- [ ] Email templates
+
+#### 📺 Videos
+- [AWS SES Tutorial — AWS Online Tech Talks](https://www.youtube.com/results?search_query=AWS+SES+tutorial+simple+email+service)
+- [Send Emails from Lambda with SES — Tutorial](https://www.youtube.com/results?search_query=send+email+AWS+lambda+SES+tutorial)
+
+#### 📖 Docs & Reading
+- [SES Developer Guide — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/Welcome.html)
+- [Sending Email with SES — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/sending-email.html)
+- [SES Bounces and Complaints Handling — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/monitor-using-event-publishing.html)
+
+#### Practice
+Trigger a welcome email via a Cognito post-confirmation Lambda trigger using SES.
+
+---
+
 ### Kinesis *(awareness only)*
 
 > Kinesis is AWS's real-time data streaming platform. Not essential for most backend apps, but worth knowing it exists for high-throughput streaming use cases.
@@ -796,7 +818,7 @@ Build a multi-step order processing workflow: validate → process payment → s
 
 ---
 
-## Phase 9 — Observability & Communication
+## Phase 9 — Observability
 
 ### Goals
 Trace requests across services and send transactional emails.
@@ -827,27 +849,6 @@ Enable X-Ray on your full API (API Gateway → Lambda → DynamoDB) and trace a 
 
 ---
 
-### SES (Simple Email Service)
-
-- [ ] Verifying identities and domains
-- [ ] Sending transactional emails from Lambda
-- [ ] Handling bounces and complaints *(critical in production)*
-- [ ] Moving out of the SES sandbox
-- [ ] Email templates
-
-#### 📺 Videos
-- [AWS SES Tutorial — AWS Online Tech Talks](https://www.youtube.com/results?search_query=AWS+SES+tutorial+simple+email+service)
-- [Send Emails from Lambda with SES — Tutorial](https://www.youtube.com/results?search_query=send+email+AWS+lambda+SES+tutorial)
-
-#### 📖 Docs & Reading
-- [SES Developer Guide — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/Welcome.html)
-- [Sending Email with SES — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/sending-email.html)
-- [SES Bounces and Complaints Handling — AWS Docs](https://docs.aws.amazon.com/ses/latest/dg/monitor-using-event-publishing.html)
-
-#### Practice
-Trigger a welcome email via a Cognito post-confirmation Lambda trigger using SES.
-
----
 
 ## Phase 10 — Capstone Project
 
