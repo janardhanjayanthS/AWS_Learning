@@ -853,54 +853,79 @@ Enable X-Ray on your full API (API Gateway → Lambda → DynamoDB) and trace a 
 ## Phase 10 — Capstone Project
 
 ### Goal
-Build a real project that connects every service and surfaces gaps in your knowledge.
+Deploy the **Multi-Tenant RAG API** project to production on AWS, connecting every service learned in this roadmap.
 
-### Project Idea: Serverless Backend API
+The project is a serverless FastAPI application where authenticated users upload documents (PDFs, web pages) and query them using an LLM. Each user's embeddings and cache are isolated. Built with FastAPI + PostgreSQL + PGVector + OpenAI, deployed to Lambda via SAM.
 
-Build a backend API for a simple app (e.g. a task manager or e-commerce backend):
+> Project: `A:\AWS\project`
+
+### Production Architecture
 
 ```
-Request
+Client
   └── Route 53 (custom domain)
         └── CloudFront (CDN + HTTPS via ACM)
-              └── ALB (Application Load Balancer — HTTPS termination, routing)
-                    ├── API Gateway (HTTP API — serverless path)
-                    │     └── Cognito Authorizer (authentication)
-                    │           └── Lambda (business logic)
-                    │                 ├── DynamoDB (primary NoSQL storage)
-                    │                 ├── RDS PostgreSQL via RDS Proxy (relational storage)
-                    │                 ├── ElastiCache / Redis (caching layer)
-                    │                 ├── Secrets Manager (credentials)
-                    │                 ├── SES (transactional emails)
-                    │                 ├── S3 (file storage)
-                    │                 └── SQS / EventBridge (async events)
-                    │
-                    └── ECS Fargate (containerised path — alternative to Lambda)
-                          └── same backing services as above
-
-Orchestration:
-  └── Step Functions (multi-step workflows)
+              └── API Gateway (HTTP API)
+                    └── Lambda — FastAPI app (Mangum)
+                          ├── RDS PostgreSQL + PGVector (private subnet, via RDS Proxy)
+                          │     ├── user table — auth
+                          │     ├── user_llm_cache table — LLM response cache
+                          │     └── langchain_pg_embedding — vector store
+                          ├── S3 — PDF upload storage
+                          ├── SQS — async document processing queue
+                          │     └── Lambda Worker — PDF/web chunking + embedding
+                          ├── SES — welcome email on user registration
+                          └── Secrets Manager — OPENAI_API_KEY, POSTGRESQL_PWD, JWT_SECRET_KEY
 
 Observability:
-  ├── CloudWatch (logs & metrics)
-  └── X-Ray (distributed tracing)
+  ├── CloudWatch (Lambda logs, RDS metrics, alarms)
+  └── X-Ray (end-to-end request tracing)
 
 Infrastructure:
-  └── SAM or CDK (deployed as code)
+  └── SAM (template.yaml — all resources defined as code)
 ```
 
 ### Capstone Checklist
-- [ ] All infrastructure defined as code with SAM or CDK
-- [ ] All secrets in Secrets Manager — nothing hardcoded
-- [ ] All endpoints protected by Cognito
-- [ ] Custom domain via Route 53 + HTTPS via ACM + CloudFront
-- [ ] ALB in front of services with HTTPS termination via ACM
-- [ ] RDS PostgreSQL in a private subnet, accessed from Lambda via RDS Proxy
-- [ ] CloudWatch alarms set for errors and high latency
-- [ ] X-Ray tracing enabled across all services
-- [ ] At least one async flow (e.g. welcome email on sign-up via SES)
-- [ ] Redis caching on at least one high-read endpoint
-- [ ] Clean up all resources after testing *(avoid surprise bills)*
+
+**Infrastructure**
+- [ ] All resources defined in `template.yaml` — Lambda, API Gateway, S3 bucket, SQS queues, IAM roles
+- [ ] Deploy with `sam build && sam deploy`
+
+**Secrets**
+- [ ] `OPENAI_API_KEY`, `POSTGRESQL_PWD`, `JWT_SECRET_KEY` stored in Secrets Manager
+- [ ] Nothing hardcoded — Lambda reads secrets at runtime via `src/core/secrets/`
+
+**Compute & API**
+- [ ] Lambda running FastAPI via Mangum, triggered by API Gateway HTTP API
+- [ ] Lambda placed inside the VPC (same VPC as RDS)
+
+**Database**
+- [ ] RDS PostgreSQL + PGVector in a private VPC subnet
+- [ ] Lambda connects to RDS via RDS Proxy (prevents connection exhaustion under concurrent requests)
+- [ ] Alembic migrations run as a one-off before first deploy
+
+**File Storage & Async Processing**
+- [ ] PDF uploads sent to S3 first (avoids Lambda 6 MB payload limit)
+- [ ] S3 upload triggers SQS message → Lambda worker handles chunking + embedding asynchronously
+- [ ] `/data/upload_pdf` returns immediately; embedding happens in the background
+
+**Email**
+- [ ] SES sends a welcome email when `POST /user/register` succeeds
+- [ ] Sender identity (domain or email) verified in SES
+
+**Domain & HTTPS**
+- [ ] ACM certificate issued for the domain (DNS validation via Route 53)
+- [ ] CloudFront distribution in front of API Gateway with the ACM cert attached
+- [ ] Route 53 ALIAS record pointing the custom domain to CloudFront
+
+**Observability**
+- [ ] CloudWatch alarms set for: Lambda error rate > 1%, Lambda duration > 10s, RDS CPU > 80%
+- [ ] X-Ray active tracing enabled on Lambda and API Gateway
+- [ ] `patch_all()` in Lambda so DynamoDB/RDS/S3 calls appear in X-Ray traces
+
+**Cleanup**
+- [ ] All resources tagged with `Project: rag-api` for easy cost tracking
+- [ ] `sam delete` or CloudFormation stack deletion removes everything when done
 
 ### 📖 Capstone Resources
 - [AWS Workshops — Serverless Workshop](https://workshops.aws) — search "serverless" for guided full-stack serverless labs
