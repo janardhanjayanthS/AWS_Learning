@@ -64,7 +64,7 @@ Covered in 10 phases — see [`plan/0_study_plan.MD`](plan/0_study_plan.MD) for 
 
 ---
 
-## Capstone Project - Deployment In-progress
+## Capstone Project - Deployment in hold
 
 A serverless **Multi-Tenant RAG API** built with FastAPI, PostgreSQL (pgvector), and deployed to AWS Lambda via SAM.
 
@@ -73,3 +73,7 @@ Users register, upload documents (PDFs or web pages), and query their content vi
 See [`project/README.md`](project/README.md) for full architecture, API docs, and setup instructions.
 
 **Stack:** FastAPI · PostgreSQL · PGVector · LangChain · OpenAI · AWS Lambda · SAM
+
+---
+
+### [claude chat](https://claude.ai/share/4bd43486-bf24-419a-89e5-312c750aedeb)
