@@ -136,4 +136,5 @@ graph LR
 ---
 
 ##### Resource:
+- [VPC Introduction](https://www.youtube.com/watch?v=3FumWkHSusY)
 - [VPC Getting Started — AWS Docs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-getting-started.html)
