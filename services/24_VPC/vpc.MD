@@ -86,7 +86,7 @@ Both are firewalls, but they work differently.
 
 ## VPC Endpoints — Stay Inside AWS
 
-By default, a Lambda in a private subnet can't reach S3, DynamoDB, or SQS without going through the internet (via NAT Gateway). **VPC Endpoints** let you connect to AWS services without leaving the AWS network — faster and cheaper.
+By default, a Lambda in a private subnet can't reach S3, DynamoDB, or SQS without going through the internet (via Network Access Translation (NAT) Gateway). **VPC Endpoints** let you connect to AWS services without leaving the AWS network — faster and cheaper.
 
 ```mermaid
 graph LR
